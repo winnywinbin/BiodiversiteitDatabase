@@ -1,0 +1,151 @@
+\d query naam = attributen bekijken
+
+>inloggen database
+	ssh s1101573@145.97.16.241
+
+>inloggen postgres sql
+	sudo -u postgres psql
+	psql -U s1101573 -W world
+
+>inloggen postgres
+	su - postgres
+
+>inloggen database
+	psql <database_naam>
+
+>database aanmaken
+	CREATE DATABASE <naam_database>
+
+>lijst aan databases weergeven
+	\l
+
+>connectie maken met een database
+	\c <naam_database>
+
+>instanties van database weergeven
+	\dt of \dt+
+
+>een enumeratie aanmaken
+	CREATE TYPE cat_enum AS ENUM ('string1','string2'...);
+
+>lijst van enumeraties weergeven
+	\dT
+
+>instantie aanmaken
+	mytest=# CREATE TABLE IF NOT EXISTS <naam_instantie> (
+  	<attribuut> SERIAL PRIMARY KEY,        -- AUTO_INCREMENT integer, as primary key
+  	<attribuut>  cat_enum NOT NULL,   -- Use the enum type defined earlier
+  	<attribuut>  VARCHAR(50) NOT NULL,    -- Variable-length string of up to 50 characters
+  	<attribuut>  NUMERIC(5,2) NOT NULL,  -- 5 digits total, with 2 decimal places
+  	<attribuut>  DATE              -- 'YYYY-MM-DD'
+); 
+
+>instantie maken Thijs
+	CREATE TABLE IF NOT EXISTS <naam_instantie> (
+	county_name varchar(50),
+	PRIMARY KEY(county_name));
+
+
+>details van een instantie weergeven
+	\d+ <naam_instantie>
+
+>primary key aanmaken
+	CREATE TABLE IF NOT EXISTS <naam_instantie> (
+  	<attribuut> SERIAL PRIMARY KEY);
+
+>foreign key aanmaken
+	CREATE TABLE IF NOT EXISTS <naam_instantie> (
+  	<attribuut> SERIAL PRIMARY KEY)
+	<attribuut2> VARCHAR(50),
+	FOREIGN KEY(<attribuut2>) REFERENCES <entiteit>(<attribuut2>));
+
+>composite key aanmaken
+	CREATE TABLE IF NOT EXISTSvoting (
+  	QuestionID NUMERIC,
+ 	MemberID NUMERIC,
+  	PRIMARY KEY (QuestionID, MemberID));
+
+>data inserten in een tabel
+	INSERT INTO <tabel_naam) (kolom namen in hoofdletters in komma) VALUES (strings door komma geschieden);
+
+>Privileges geven aan een specifieke user
+	GRANT ALL PRIVILEGES ON SCHEMA public TO <naam>;
+
+	
+
+
+> INNER JOIN (impliciet)
+	SELECT * FROM employee, department
+	WHERE employee.DepartmentID = department.DepartmentID
+	(iemand zonder department word dus verwijderd)
+  Expliciet 
+	SELECT * FROM employee INNER JOIN department ON
+	employee.DepartmentID = department.DepartmentID
+
+	SELECT * FROM employee JOIN department
+	USING (DepartmentID)
+	( Hier komt niet geheel hetzelfde uit)
+	Voordeel; hij toont DepartmentID maar 1x ipv 2.
+
+> OUTER JOIN
+	SELECT * FROM employee LEFT OPUTER JOIN department ON
+	employee.DepartmentID = department.DepartmemtID
+> RIGHT OUTER JOIN
+	
+> SELECT * FROM werknemer, afdeling
+	werknemer.AfdelingID = afdeling.AfdelingID
+> SELECT name FROM country
+	WHERE population>10000000;
+ 
+> SELECT COUNT(name) FROM country
+	WHERE population>10000000;
+SUM() -> totaal van iets bv. SUM(population)
+MIN() -> eerste
+MAX() -> laatste
+AVG() -> gemiddelde van verschillende getallen AVG(population)
+Gemiddelde kan ook aangegeven worden door bijvoorbeeld; 	
+	SUM(population)/COUNT(nam)
+
+WHERE: BETWEEN, IN
+WHERE: LIKE en wildcards
+
+DESC ; aflopend
+ASC ; oplopend (default)
+
+SELECT * FROM city
+LIMIT 5 (print 5, beginnend bij 5)
+OFFSET 5;
+
+SELECT name FROM city
+WHERE countrycode!='NLD'
+
+SELECT name, population, countrycode FROM city
+WHERE population > 10000000 
+OR population < 50
+
+SELECT name FROM city
+WHERE countrycode IN ('NLD', 'BEL')
+
+SELECT code, name FROM country
+WHERE name LIKE '_or%'
+
+Hernoemen kolommen;
+	AS naam (na select)
+
+> GROUP BY
+Groepeer de data op basis van een attribuut 
+	SELECT afdeling, COUNT(*) FROM artikel
+	GROUP BY afdeling;
+Zo kan je bijvoorbeeld zien hoeveel per afdeling
+	SELECT afdeling, AVG(prijs) FROM artikel
+	GROUP BY afdeling;
+Zo kun je de gemiddelde prijs zien van artikelen van dezelfde afdeling
+- De attribuut (of attributen) die je gebruikt hebt in je GROUP BY statement MOET terug komen in je SELECT.
+- Verder mogen er ALLEEN maar aggregate kolommen worden geselecteerd (bijv SUM, COUNT)
+- Andere attributen zijn NIET toegestaan
+- Moet als eerste worden benoemd in SELECT
+
+> SELECT DISTINCT
+	Met deze vorm van SELECT verwijder je alle dubbele rijen ui de resultaten.
+
+
